@@ -1,0 +1,676 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\He}{\operatorname{He}}
+\newcommand{\Disc}{\operatorname{Disc}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\cont}{\operatorname{cont}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\poch}[3]{(#1;#2)_{#3}}
+\newcommand{\qbin}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}_q}
+\newcommand{\qbinw}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}_\omega}
+
+\title[Ordinary Discriminants of Rogers--Szeg\H{o} Polynomials]{Moving-Root Splitting, $2$-Adic Wronskians, and Ordinary $z$-Discriminants of Rogers--Szeg\H{o} Polynomials at Roots of Unity}
+
+\author{Daniyar Kuttymbek}
+\address{Astana, Kazakhstan}
+\email{daniyar.kuttymbek@gmail.com}
+
+\author{Adilkhan Kuttymbek}
+\address{Astana, Kazakhstan}
+\email{adilkhan.kuttymbek@gmail.com}
+
+\author{Amina Kolpenova}
+\address{Astana, Kazakhstan}
+\email{aminakolpenova@gmail.com}
+
+\date{\today}
+\subjclass[2020]{Primary 33D45, 11R18; Secondary 11C08, 11S05, 33C45}
+\keywords{Rogers--Szeg\H{o} polynomials, ordinary polynomial discriminant, cyclotomic polynomials, probabilists' Hermite polynomials, $2$-adic Newton polygons, Hermite Wronskians}
+
+\begin{document}
+
+\begin{abstract}
+Let $H_n(z;q)=\sum_{k=0}^n \qbin{n}{k} z^k$ be the Rogers--Szeg\H{o} polynomial, and let $D_n(q)=\Disc_z H_n(z;q)\in\Z[q]$ denote its \emph{ordinary} $z$-discriminant (distinct from the $q$-difference discriminant of Ismail and Witte). At an odd-order primitive root of unity $q=\omega$ of order $d$, the classical $q$-Lucas factorization $H_{Ad+b}(z;\omega)=(1+z^d)^A H_b(z;\omega)$ produces repeated root clusters at the $d$-th roots of $-1$.
+
+We determine the exact first-order root splitting as $q$ moves away from $\omega$ along $q^d-1=\eps^2$, together with the complete signed leading coefficient and exact cyclotomic multiplicity of $D_n(q)$: separated clusters have monic probabilists' Hermite initial form $\He_A$, while a single simple overlap at $z=-1$ (for odd $b$) has initial form $J_{A+1}(y;\tau_b)=y\He_A(y)-\tau_b\He_A'(y)$ with explicit Rogers--Szeg\H{o} parameter $\tau_b=dW_b/H_b'(-1;\omega)$. We then prove an unconditional arithmetic theorem showing that every root of the adjacent parity-Hermite Wronskians satisfies $v_2(y-1)=1/2$; because odd cyclotomic fields are unramified at $2$, this eliminates the overlap guard $\Disc_y J_{A+1}(y;\tau_b)\neq 0$ (and $H_b'(-1;\omega)\neq 0$) uniformly for \emph{every} odd $d\ge 3$, every odd $1\le b<d$, and every $A\ge 1$.
+
+Combining this with an integral Hermite degeneration at $q=1$ removes all remaining static guards at prime-power orders $d=p^s$ with $0\le b<p$, yielding the unconditional exact cyclotomic valuation
+\[
+\ord_{\Phi_p(q)} D_n(q) = p\binom{A}{2} + A(b\bmod 2)
+\]
+for every odd prime $p$ and every $n=Ap+b\ge 0$ ($0\le b<p$). Finally, we establish a parity-complete finite-characteristic inverse pairing for $J_{A+1}$ (with exact triple-zero exception $\tau=\tau'=2$ when $p\equiv 1\pmod 4$), deduce squarefreeness of $H_{(sp-1)/2}(z;\zeta_{sp})$ across five infinite composite families $s\in\{3,7,11,15,19\}$ and all primes $p\equiv 1\pmod 4$ with $p\nmid s$, and verify exactness of the order formula $d\binom{A}{2}+A(b\bmod 2)$ across all $74$ odd composite orders $d\le 255$ plus $d=289,343$ via dual-witness finite-field resultant lifting.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction and main results}
+\label{sec:intro}
+
+The Gaussian binomial coefficients are the integral polynomials defined recursively by
+\[
+\qbin{0}{0}=1,\qquad \qbin{n}{k}=\qbin{n-1}{k}+q^{n-k}\qbin{n-1}{k-1},
+\]
+with out-of-range terms zero. The \emph{Rogers--Szeg\H{o} polynomials} and their \emph{ordinary $z$-discriminants} are
+\begin{equation}
+\label{eq:Hn-Dn}
+H_n(z;q)=\sum_{k=0}^n \qbin{n}{k}z^k \in \Z[q][z],\qquad
+D_n(q)=\Disc_z H_n(z;q)\in\Z[q].
+\end{equation}
+Every $H_n$ is monic in $z$ with constant term $1$. For a polynomial $f(z)=a\prod_{i=1}^e(z-\rho_i)$ of degree $e\ge 1$ and $g$ of degree $h$, we use the standard conventions
+\begin{equation}
+\label{eq:disc-res}
+\Disc f = a^{2e-2}\prod_{1\le i<j\le e}(\rho_i-\rho_j)^2 = (-1)^{e(e-1)/2}a^{-1}\Res(f,f'),\qquad
+\Res(f,g) = a^h\prod_{i=1}^e g(\rho_i),
+\end{equation}
+where $f'$ is the ordinary derivative with respect to $z$, together with $\Disc(1)=\Disc(\text{monic linear})=1$ and $\Res(f,1)=1$ (hence $D_0=D_1=1$). Crucially, $D_n(q)$ is the ordinary derivative discriminant, not the $q$-difference discriminant studied by Ismail and Witte~\cite{IW01}: already for $H_2(z;q)=z^2+(1+q)z+1$, the ordinary discriminant is $(q-1)(q+3)$, whereas the monic $q$-discriminant is $(q-1)(q+1)^2$.
+
+Write $(a;q)_j = \prod_{t=0}^{j-1}(1-aq^t)$ for the $q$-Pochhammer symbol, let $\He_a(y)$ denote the monic probabilists' Hermite polynomials
+\begin{equation}
+\label{eq:He-def}
+\He_0(y)=1,\qquad \He_1(y)=y,\qquad \He_{a+1}(y)=y\He_a(y)-a\He_{a-1}(y),
+\end{equation}
+and set $P_A = \prod_{j=1}^A j^j = \Disc(\He_A)$ (with $P_0=1$). Let $\Phi_d(q)\in\Z[q]$ be the $d$-th cyclotomic polynomial and $Q_d(q)=(q^d-1)/\Phi_d(q)$.
+
+Fix an odd integer $d\ge 1$, a primitive complex $d$-th root of unity $\omega$, $A\ge 1$, and $0\le b<d$, and write
+\[
+n = Ad+b,\qquad F(z)=z^d+1,\qquad G(z)=H_b(z;\omega),\qquad
+q(\eps)=\omega(1+\eps^2)^{1/d}\quad (q(\eps)^d-1=\eps^2),
+\]
+where $(1+\eps^2)^{1/d}$ is the formal binomial series with constant term $1$. Our first theorem gives the complete local cluster splitting and exact leading coefficient of $D_n(q)$ at $q=\omega$.
+
+\begin{theorem}[Moving-root splitting and local ordinary discriminant]
+\label{thm:local}
+Let $d\ge 1$ be odd, $\omega$ a primitive $d$-th root of unity, $A\ge 1$, and $0\le b<d$.
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item \emph{(Separated clusters)} Assume $\Delta:=\Disc G\neq 0$ and $R:=\Res(F,G)\neq 0$ (which requires $b$ even when $d\ge 3$). Then for every root $\alpha$ of $F(z)=z^d+1$,
+\begin{equation}
+\label{eq:sep-split}
+H_n(\alpha+\eps x;\, q(\eps)) = \eps^A(-1)^A d^{A/2} G(\alpha)\He_A\!\left(\frac{\sqrt{d}\,x}{\alpha}\right) + O(\eps^{A+1}).
+\end{equation}
+With $K = dA(A-1)/2$,
+\begin{equation}
+\label{eq:Csep}
+D_n(q(\eps)) = \eps^{2K}\bigl(C_{\mathrm{sep}}+O(\eps^2)\bigr),\qquad
+C_{\mathrm{sep}} = (-1)^{A(d-1)/2} d^{dA(A+1)/2} P_A^d\, \Delta R^{2A}\neq 0,
+\end{equation}
+and $\ord_{\Phi_d(q)} D_n(q) = K$.
+
+\item \emph{(One simple overlap at $-1$)} Assume $d\ge 3$ and $1\le b<d$ is odd. Write $G(z)=(z+1)U(z)$, $g_b=U(-1)=G'(-1)$,
+\begin{equation}
+\label{eq:tau-J}
+W_b = \frac{\poch{\omega}{\omega}{b}}{\poch{\omega^2}{\omega^2}{(b+d)/2}},\qquad
+\tau_b = \frac{dW_b}{g_b},\qquad
+J_{A+1}(y;\tau) = y\He_A(y) - \tau\He_A'(y) = \He_{A+1}(y)+A(1-\tau)\He_{A-1}(y).
+\end{equation}
+Assume $\Delta_U:=\Disc U\neq 0$, $R_U:=\Res(F,U)\neq 0$ (which implies $g_b\neq 0$), and $S_A(\tau_b):=\Disc_y J_{A+1}(y;\tau_b)\neq 0$. Then
+\begin{equation}
+\label{eq:ov-split}
+H_n(-1+\eps x;\, q(\eps)) = \eps^{A+1} d^{(A-1)/2} g_b J_{A+1}(\sqrt{d}\,x;\tau_b) + O(\eps^{A+2}),
+\end{equation}
+while~\eqref{eq:sep-split} holds at every other root $\alpha\neq -1$ of $F$. With $L = K+A = dA(A-1)/2 + A$,
+\begin{equation}
+\label{eq:Cov}
+D_n(q(\eps)) = \eps^{2L}\bigl(C_{\mathrm{ov}}+O(\eps^2)\bigr),\qquad
+C_{\mathrm{ov}} = (-1)^{A(d-1)/2} d^{dA(A+1)/2+A} P_A^{d-1} S_A(\tau_b)\Delta_U R_U^{2A} g_b^2\neq 0,
+\end{equation}
+and $\ord_{\Phi_d(q)} D_n(q) = L$.
+
+\item \emph{(Integral cyclotomic normalization)} In either case, letting $(M,C)$ denote $(K,C_{\mathrm{sep}})$ or $(L,C_{\mathrm{ov}})$, there exists $E_{n,d}\in\Z[q]$ such that
+\begin{equation}
+\label{eq:integral-quot}
+D_n(q) = \Phi_d(q)^M E_{n,d}(q),\qquad
+E_{n,d}(\omega) = Q_d(\omega)^M C\neq 0,\qquad
+\lim_{q\to\omega}\frac{D_n(q)}{(q-\omega)^M} = (d\omega^{d-1})^M C.
+\end{equation}
+\end{enumerate}
+\end{theorem}
+
+At first sight, applying Theorem~\ref{thm:local}(b) requires checking two delicate nonvanishing conditions for the overlap cluster: $g_b\neq 0$ and $\Disc_y J_{A+1}(y;\tau_b)\neq 0$. Our second main theorem removes \emph{both} conditions unconditionally for every odd order $d\ge 3$, every odd $b<d$, and every $A\ge 1$, via an arithmetic $2$-adic obstruction on parity-Hermite Wronskians.
+
+\begin{theorem}[$2$-adic Wronskian valuation and uniform overlap simplicity]
+\label{thm:2adic-main}
+Write $\He_{2m}(x)=U_m(x^2)$ and $\He_{2m+1}(x)=xV_m(x^2)$, and define the adjacent parity-Hermite Wronskians $\mathcal{W}_m^R(y)=R_m'(y)R_{m-1}(y)-R_m(y)R_{m-1}'(y)$ ($R\in\{U,V\}$, $m\ge 1$).
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item For every $m\ge 2$, every root $y\in\overline{\Q}_2$ of $\mathcal{W}_m^U$ or $\mathcal{W}_m^V$ satisfies $v_2(y-1)=1/2$ (normalized by $v_2(2)=1$). Equivalently, the lower Newton polygon of $\mathcal{W}_m^R(1+z)$ is the single segment from $(0,m-1)$ to $(2m-2,0)$.
+\item Let $K\subseteq\Q_2^{\mathrm{nr}}$ be an unramified algebraic extension of $\Q_2$ and let $\tau\in K$. For every $A\ge 1$, $J_{A+1}(x;\tau)$ is squarefree if and only if $\tau\neq 0$ (for $A$ odd) or $\tau\neq -1/A$ (for $A$ even).
+\item Consequently, for \emph{every} odd $d\ge 3$, every primitive $d$-th root of unity $\omega$, every odd $1\le b<d$, and every $A\ge 1$, we have $g_b\neq 0$ and $\Disc_x J_{A+1}(x;\tau_b)\neq 0$.
+\end{enumerate}
+\end{theorem}
+
+Combining Theorem~\ref{thm:2adic-main}(c) with an integral Hermite degeneration at $q=1$ removes the static residual guards at all prime-power orders $d=p^s$ whenever $0\le b<p$, giving an unconditional exact theorem for all odd primes $p$ and all degrees $n\ge 0$.
+
+\begin{theorem}[Unconditional exact odd-prime and prime-power cyclotomic orders]
+\label{thm:prime-uncond}
+Let $p$ be an odd prime, $s\ge 1$, $d=p^s$, and $n=Ad+b$ with $A\ge 0$ and $0\le b<p$. Then
+\begin{equation}
+\label{eq:prime-order}
+\ord_{\Phi_d(q)} D_n(q) = d\binom{A}{2} + A(b\bmod 2),
+\end{equation}
+and for $A\ge 1$ the leading coefficients $C_{\mathrm{sep}}, C_{\mathrm{ov}}$ in Theorem~\ref{thm:local} are nonzero unconditionally, with $E_{n,d}(\omega)=C(\omega^{d/p}-1)^M\neq 0$. In particular, for every odd prime $p$ and every $n\ge 0$, writing $n=Ap+b$ with $0\le b<p$,
+\[
+\ord_{\Phi_p(q)} D_n(q) = p\binom{A}{2} + A(b\bmod 2),
+\]
+so $D_n(q)=\Bigl(\prod_{p\le n\text{ odd prime}} \Phi_p(q)^{e_p(n)}\Bigr) R_n(q)$ with $R_n\in\Z[q]$ divisible by no odd-prime cyclotomic polynomial $\Phi_p$.
+\end{theorem}
+
+Moving beyond prime orders to composite orders $d$, we establish two complementary mechanisms: (i) a finite-characteristic inverse-pairing bridge producing \emph{five infinite composite families} of squarefree half-order polynomials $H_{(sp-1)/2}(z;\zeta_{sp})$, and (ii) a dual-witness finite-field resultant lift certifying exactness of~\eqref{eq:prime-order} for all $n\ge 0$ across $76$ odd composite orders.
+
+\begin{theorem}[Five infinite composite families and $76$ certified composite orders]
+\label{thm:composite-main}
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item For every $s\in\{3,7,11,15,19\}$ and every prime $p\equiv 1\pmod 4$ with $p\nmid s$, the half-order Rogers--Szeg\H{o} polynomial $H_{(sp-1)/2}(z;\zeta_{sp})$ is squarefree for every primitive $sp$-th root $\zeta_{sp}$, and hence Theorem~\ref{thm:local}(b) holds unconditionally at $(d,b)=(sp,(sp-1)/2)$ for all $A\ge 1$.
+\item For every odd composite $d\le 255$ (all $74$ such orders) and additionally $d\in\{289,343\}$, every residual $H_b(z;\omega)$ ($0\le b<d$) is squarefree and satisfies $\gcd(H_b(z;\omega),z^d+1)=1$ ($b$ even) or $z+1$ ($b$ odd). Consequently, for all $76$ composite orders $d$ and every $n=Ad+b\ge 0$ ($0\le b<d$),
+\[
+\ord_{\Phi_d(q)} D_n(q) = d\binom{A}{2} + A(b\bmod 2).
+\]
+\end{enumerate}
+\end{theorem}
+
+The paper is organized as follows. Sections~\ref{sec:local-split} and~\ref{sec:disc-coeff} prove Theorem~\ref{thm:local}. Section~\ref{sec:2adic} proves Theorem~\ref{thm:2adic-main}. Section~\ref{sec:prime-static} proves Theorem~\ref{thm:prime-uncond}. Section~\ref{sec:finite-char} proves the finite-characteristic inverse pairing, same-component content criteria, reciprocal reduction, and Theorem~\ref{thm:composite-main}(a). Section~\ref{sec:char0-half} records the characteristic-zero half-residual-degree disk and resonance theorems. Section~\ref{sec:76-cert} proves Theorem~\ref{thm:composite-main}(b) and the complementary fixed-node identity. Section~\ref{sec:prior} situates our results against prior literature and states the general odd-composite conjecture.
+
+\section{Generating series and local cluster splitting}
+\label{sec:local-split}
+
+\begin{lemma}[Rogers--Szeg\H{o} identities and $q$-Lucas factorization]
+\label{lem:rs-basic}
+The polynomials $H_n(z;q)$ satisfy
+\begin{equation}
+\label{eq:rs-rec}
+H_0=1,\quad H_1=1+z,\quad
+H_n=(1+z)H_{n-1}+(q^{n-1}-1)zH_{n-2},\quad
+z^n H_n(z^{-1};q)=H_n(z;q),
+\end{equation}
+and the formal generating identity over $\Q(q,z)$
+\begin{equation}
+\label{eq:rs-gf}
+\sum_{n\ge 0}\frac{H_n(z;q)t^n}{\poch{q}{q}{n}}
+= \exp\!\left(\sum_{k\ge 1}\frac{(1+z^k)t^k}{k(1-q^k)}\right).
+\end{equation}
+At any odd-order primitive $d$-th root of unity $\omega$ and $n=Ad+b$ ($0\le b<d$),
+\begin{equation}
+\label{eq:qlucas}
+H_{Ad+b}(z;\omega) = (1+z^d)^A H_b(z;\omega).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Direct substitution of $q$-Pascal gives~\eqref{eq:rs-rec}, and symmetry of $\qbin{n}{k}$ gives reciprocity. Setting $E(t)=\sum_{j\ge 0} t^j/\poch{q}{q}{j}$, the coefficient recurrence yields $E(qt)=(1-t)E(t)$, so $\log E(t)=\sum_{k\ge 1}t^k/(k(1-q^k))$; expanding $E(t)E(zt)$ gives~\eqref{eq:rs-gf}. Finally, the finite $q$-binomial theorem $\prod_{j=0}^{n-1}(1+xq^j)=\sum_{k=0}^n q^{k(k-1)/2}\qbin{n}{k}x^k$ specializes at $q=\omega$ (odd $d$) to $(1+x^d)^A\prod_{j=0}^{b-1}(1+x\omega^j)$. Writing $k=cd+e$ ($0\le e<d$), the difference $k(k-1)/2-e(e-1)/2 = dc(cd+2e-1)/2$ is divisible by odd $d$, giving the classical $q$-Lucas identity $\qbinw{Ad+b}{cd+e}=\binom{A}{c}\qbinw{b}{e}$~\cite{LS87,Sag92}, and summing proves~\eqref{eq:qlucas}.
+\end{proof}
+
+\begin{lemma}[Singular generating-series weights]
+\label{lem:singular}
+In~\eqref{eq:rs-gf}, split the exponent into terms with $d\mid k$ (the singular part) and $d\nmid k$ (the regular part), and let $B(t;z,q)$ be the exponential of the regular part. Setting $z=\alpha+\eps x$ with $\alpha^d=-1$, $q=q(\eps)$ with $q(\eps)^d-1=\eps^2$, and $u=t^d$, the singular logarithm has initial coefficients
+\begin{equation}
+\label{eq:sing-log}
+[u] = \frac{x}{\alpha\eps} + O(1),\qquad
+[u^2] = -\frac{1}{2d\eps^2} + O(\eps^{-1}),
+\end{equation}
+while for every $l\ge 3$ the pole order in $\eps$ of $[u^l]$ is strictly less than $l$. Consequently,
+\begin{equation}
+\label{eq:sing-exp}
+[u^a]\exp(\text{singular logarithm}) = \eps^{-a}\frac{d^{-a/2}}{a!}\He_a\!\left(\frac{\sqrt{d}\,x}{\alpha}\right) + O(\eps^{-a+1}),
+\end{equation}
+and
+\begin{equation}
+\label{eq:poch-exp}
+\poch{q(\eps)}{q(\eps)}{Ad+b} = (-1)^A A!\, d^A \poch{\omega}{\omega}{b}\, \eps^{2A}\bigl(1+O(\eps^2)\bigr).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $k=ld$, the denominator $1-q(\eps)^{ld}=1-(1+\eps^2)^l=-l\eps^2+O(\eps^4)$ has order $2$ in $\eps$. The numerator $1+(\alpha+\eps x)^{ld}$ has zero constant term for odd $l$ (since $\alpha^d=-1$) and equals $2+O(\eps)$ for even $l$; hence the pole order in $\eps$ is at most $1$ for odd $l$ and at most $2$ for even $l$. Expanding $l=1$ gives $(d\alpha^{d-1}\eps x)/(d(-1)\eps^2) = x/(\alpha\eps)+O(1)$ (using $\alpha^d=-1$), and $l=2$ gives $2/(2d(-2\eps^2)) = -1/(2d\eps^2)+O(\eps^{-1})$, proving~\eqref{eq:sing-log}. For $l\ge 3$, the pole order ($\le 2$) is strictly smaller than $l$, so in extracting $[u^a]$ from the exponential only the leading terms of $[u]$ and $[u^2]$ achieve pole order $a$. Their exponential is the Hermite generating function $\exp(Ys-s^2/2)=\sum_{a\ge 0}\He_a(Y)s^a/a!$ with $Y=\sqrt{d}\,x/\alpha$ and $s=u/(\sqrt{d}\,\eps)$, proving~\eqref{eq:sing-exp}.
+
+In~\eqref{eq:poch-exp}, the $A$ factors $1-q^{jd}$ ($1\le j\le A$) contribute $(-1)^A A!\,\eps^{2A}(1+O(\eps^2))$; each complete block of $d-1$ nonmultiples contributes $\prod_{j=1}^{d-1}(1-\omega^j)=d(1+O(\eps^2))$; and the final $b$ factors contribute $\poch{\omega}{\omega}{b}(1+O(\eps^2))$. Every perturbation is even in $\eps$ because $q(\eps)$ depends on $\eps^2$.
+\end{proof}
+
+\begin{proof}[Proof of~\eqref{eq:sep-split} and~\eqref{eq:ov-split} in Theorem~\ref{thm:local}]
+In~\eqref{eq:rs-gf}, extracting $[t^{Ad+b}]$ pairs $[t^{b+jd}]B(t;z,q(\eps))$ with $[u^{A-j}]\exp(\text{singular})$ for $0\le j\le A$, and multiplies by~\eqref{eq:poch-exp}. Since $b<d$, the regular part $B(t;z,\omega)$ agrees with the full generating function through degree $t^b$, so $[t^b]B(t;z,\omega)=H_b(z;\omega)/\poch{\omega}{\omega}{b}$.
+
+\smallskip
+\noindent\emph{Separated case~\eqref{eq:sep-split}:} At $z=\alpha+\eps x$, $[t^b]B = G(\alpha)/\poch{\omega}{\omega}{b}+O(\eps)$, while every $j\ge 1$ pairs with pole order at most $A-j<A$. Multiplying the $j=0$ term of~\eqref{eq:sing-exp} by~\eqref{eq:poch-exp} yields~\eqref{eq:sep-split}. Note that all square roots cancel explicitly: the $x^{A-2j}$ coefficient is $(-1)^{A+j}A!d^{A-j}G(\alpha)\alpha^{-A+2j}/(2^j j!(A-2j)!)$, with leading $x^A$ coefficient $(-d/\alpha)^A G(\alpha) = F'(\alpha)^A G(\alpha)$.
+
+\smallskip
+\noindent\emph{Shared root at $-1$~\eqref{eq:ov-split}:} For odd $b$, reciprocity~\eqref{eq:rs-rec} gives $H_b(-1;q)\equiv 0$, so at $z=-1+\eps x$,
+\[
+[t^b]B(t;-1+\eps x, q(\eps)) = \frac{\eps x g_b}{\poch{\omega}{\omega}{b}} + O(\eps^2),
+\]
+which pairs with $u^A$ ($\eps^{-A}$) to give net order $\eps^{1-A}$. Meanwhile, the $j=1$ regular term $[t^{b+d}]B(t;-1,\omega)$ pairs with $u^{A-1}$ ($\eps^{-(A-1)}$) at the \emph{same} order $\eps^{1-A}$, whereas all $j\ge 2$ have order $\ge \eps^{2-A}$. At $z=-1$, the numerator $1+(-1)^k$ in~\eqref{eq:rs-gf} vanishes for all odd $k$, and the smallest positive even multiple of $d$ is $2d > b+d$; hence removing $d\mid k$ leaves $[t^{b+d}]$ unchanged, and $E(t)E(-t)=\sum_{j\ge 0} t^{2j}/\poch{q^2}{q^2}{j}$ gives
+\[
+[t^{b+d}]B(t;-1,\omega) = \frac{1}{\poch{\omega^2}{\omega^2}{(b+d)/2}}.
+\]
+Combining the $j=0$ and $j=1$ terms with~\eqref{eq:sing-exp} (at $\alpha=-1$) and~\eqref{eq:poch-exp} gives
+\begin{align*}
+[\eps^{A+1}] H_n(-1+\eps x; q(\eps))
+&= (-1)^A d^{A/2}\Bigl(g_b x \He_A(-\sqrt{d}\,x) + A\sqrt{d}\,W_b\He_{A-1}(-\sqrt{d}\,x)\Bigr)\\
+&= (-1)^{A+1} d^{(A-1)/2} g_b \Bigl((-\sqrt{d}\,x)\He_A(-\sqrt{d}\,x) - \tau_b \He_A'(-\sqrt{d}\,x)\Bigr)\\
+&= (-1)^{A+1} d^{(A-1)/2} g_b J_{A+1}(-\sqrt{d}\,x;\tau_b) = d^{(A-1)/2} g_b J_{A+1}(\sqrt{d}\,x;\tau_b),
+\end{align*}
+where we used $\He_A'=A\He_{A-1}$, $\tau_b=dW_b/g_b$, and the parity identity $J_{A+1}(-y;\tau)=(-1)^{A+1}J_{A+1}(y;\tau)$. Its leading $x^{A+1}$ coefficient is $g_b d^A$, matching $F(z)^A(z+1)U(z)$ at $z=-1$.
+\end{proof}
+
+\section{Root branches, full discriminant coefficients, and normalization}
+\label{sec:disc-coeff}
+
+\begin{proof}[Proof of~\eqref{eq:Csep}, \eqref{eq:Cov}, and~\eqref{eq:integral-quot} in Theorem~\ref{thm:local}]
+Recall from the Hermite recurrence~\eqref{eq:He-def} that $\He_A'=A\He_{A-1}$ and $\Disc(\He_A)=P_A=\prod_{j=1}^A j^j\neq 0$: letting $r_A=\Res(\He_A,\He_{A-1})$, evaluation at roots of $\He_{A-1}$ yields $r_A=(-1)^{A-1}(A-1)^{A-1}r_{A-1}$, and multiplying by $A^A$ and $(-1)^{A(A-1)/2}$ gives $P_A$.
+
+Under the hypotheses of either~(a) or~(b), every local initial polynomial ($\He_A$, $J_{A+1}$, and the residual factors $G$ or $U$) is squarefree. By the formal implicit function theorem, every simple root lifts uniquely as a formal power series in $\eps$, and the lifted root counts sum to $Ad+b=n$, accounting for all $n$ roots of the monic polynomial $H_n$.
+
+\smallskip
+\noindent\emph{Separated discriminant~\eqref{eq:Csep}:} Let $h_1,\ldots,h_A$ be the roots of $\He_A$. By~\eqref{eq:sep-split}, the $A$ branches at each root $\alpha$ of $F(z)=z^d+1$ take the form
+\begin{equation}
+\label{eq:sep-branch}
+z_{\alpha,j} = \alpha + \eps\frac{\alpha}{\sqrt{d}}\,h_j + O(\eps^2).
+\end{equation}
+Within cluster $\alpha$, the product of squared root differences is $\eps^{A(A-1)}(\alpha^2/d)^{A(A-1)/2}P_A(1+O(\eps))$. Since $z^d+1=\prod_{\alpha^d=-1}(z-\alpha)$ has constant term $1=(-1)^d\prod\alpha$, odd $d$ gives $\prod_{\alpha^d=-1}\alpha=-1$; because $A(A-1)$ is even, $\prod_\alpha (\alpha^2)^{A(A-1)/2} = 1$. Multiplying over all $d$ clusters gives $\eps^{2K}d^{-K}P_A^d$ with $K=dA(A-1)/2$.
+
+Between distinct clusters, the leading contribution is $(\Disc F)^{A^2}$, where $\Disc(z^d+1)=(-1)^{(d-1)/2}d^d$ (since $F'(\alpha)=d\alpha^{d-1}$ gives $\Res(F,F')=d^d$ for odd $d$). Between residual roots we get $\Delta=\Disc G$, and between the $d$ clusters and the $b$ residual roots we get $R^{2A}=\Res(F,G)^{2A}$. Multiplying these factors and using $dA^2 - K = dA(A+1)/2$ and $A^2\equiv A\pmod 2$ yields $C_{\mathrm{sep}}$ in~\eqref{eq:Csep}. Because $q(\eps)$ is even in $\eps$, $D_n(q(\eps))$ is a power series in $\eps^2$, so the relative remainder is $O(\eps^2)$.
+
+\smallskip
+\noindent\emph{Overlap discriminant~\eqref{eq:Cov}:} At $\alpha=-1$, the $A+1$ branches are $-1+\eps j_k/\sqrt{d}+O(\eps^2)$ where $j_1,\ldots,j_{A+1}$ are the roots of $J_{A+1}(y;\tau_b)$, while the remaining $d-1$ roots of $F$ obey~\eqref{eq:sep-branch}. Since $\prod_{\alpha\neq -1}\alpha = 1$, the combined within-cluster product is
+\[
+\eps^{2L} d^{-L} P_A^{d-1} S_A(\tau_b),\qquad L = (d-1)\frac{A(A-1)}{2} + \frac{A(A+1)}{2} = K+A.
+\]
+Setting $F_0(z)=F(z)/(z+1)$, we have $F_0(-1)=F'(-1)=d$ and $\Disc F_0 = (-1)^{(d-1)/2} d^{d-2}$. Between the $d-1$ ordinary clusters we get $(\Disc F_0)^{A^2}$; between those clusters and the size-$(A+1)$ cluster at $-1$ we get $F_0(-1)^{2A(A+1)}=d^{2A(A+1)}$; multiplying gives $(-1)^{A(d-1)/2}d^{dA^2+2A}$. The $b-1$ residual roots of $U$ contribute $\Delta_U$ internally, $\Res(F,U)^{2A}=R_U^{2A}$ against the $A$ base copies of $F$, and an additional $U(-1)^2=g_b^2$ against the single extra branch at $-1$. Combining exponents ($dA^2+2A-L = dA(A+1)/2+A$) yields $C_{\mathrm{ov}}$ in~\eqref{eq:Cov}.
+
+\smallskip
+\noindent\emph{Integral normalization~\eqref{eq:integral-quot}:} Since $q^d-1=\eps^2$ has a simple zero at $q=\omega$ with derivative $d\omega^{d-1}$, the exact vanishing order of $D_n(q)$ at $q=\omega$ is $M$, with $\lim_{q\to\omega} D_n(q)/(q-\omega)^M = (d\omega^{d-1})^M C\neq 0$. Galois conjugacy over $\Q$ transports nonvanishing of $C$ to every primitive $d$-th root of unity, so $\Phi_d(q)^M \mid D_n(q)$ and $\Phi_d(q)^{M+1}\nmid D_n(q)$ in $\Q[q]$. Because $\Phi_d\in\Z[q]$ is monic, Euclidean division preserves integrality: $E_{n,d}=D_n/\Phi_d^M\in\Z[q]$. Finally, $q^d-1=\Phi_d(q)Q_d(q)$ yields $E_{n,d}(\omega)=Q_d(\omega)^M C\neq 0$.
+\end{proof}
+
+\section{Uniform overlap simplicity via $2$-adic parity-Hermite Wronskians}
+\label{sec:2adic}
+
+We now prove Theorem~\ref{thm:2adic-main}, eliminating $g_b\neq 0$ and $\Disc_x J_{A+1}(x;\tau_b)\neq 0$ for every odd $d\ge 3$, odd $1\le b<d$, and $A\ge 1$.
+
+\begin{lemma}[Partial-sum representation and nonreality of $\tau_b$]
+\label{lem:partial}
+Let $d=2h+1\ge 3$ be odd, $\omega$ a primitive $d$-th root of unity, and $b=2r+1<d$ ($0\le r<h$). Define
+\[
+t_k = \frac{\poch{\omega}{\omega^2}{k}}{\poch{\omega^2}{\omega^2}{k}},\qquad
+S_j = \sum_{k=0}^j t_k.
+\]
+Then
+\begin{equation}
+\label{eq:tau-ratio}
+g_b = \poch{\omega^2}{\omega^2}{r} S_r \neq 0,\qquad \tau_b = \frac{S_h}{S_r}.
+\end{equation}
+In the principal embedding $\omega=e^{2\pi i/d}$, one has $\operatorname{Im}\tau_b < 0$. Consequently, at every primitive embedding $\omega$, $\tau_b$ is neither $0$ nor any real rational number.
+\end{lemma}
+
+\begin{proof}
+Evaluating~\eqref{eq:rs-rec} at $z=-1$ inductively gives $H_{2j}(-1;q)=\poch{q}{q^2}{j}$ and $H_{2j+1}(-1;q)=0$. Differentiating~\eqref{eq:rs-rec} with respect to $z$ at $z=-1$ yields
+\[
+g_{2r+1}(q) = \poch{q}{q^2}{r} + (1-q^{2r})g_{2r-1}(q),\qquad g_1(q)=1.
+\]
+Dividing by $\poch{q^2}{q^2}{r}$ and summing from $0$ to $r$ gives $g_b=\poch{\omega^2}{\omega^2}{r}S_r$ (all denominators are nonzero at $\omega$ since $2r<d$).
+
+Put $E=\poch{\omega^2}{\omega^2}{h}$. Since $\poch{\omega}{\omega}{2r+1} = \poch{\omega}{\omega^2}{r+1}\poch{\omega^2}{\omega^2}{r}$ and $(b+d)/2 = r+h+1$, rewriting the odd factors $\omega^{2j-1}=\omega^{2(j+h)}$ (as $\omega^{2h+1}=1$) cancels them against the trailing factors of $\poch{\omega^2}{\omega^2}{r+h+1}$, giving $W_b = \poch{\omega^2}{\omega^2}{r}/E$. Meanwhile $H_d(z;\omega)=1+z^d$ has $H_d'(-1;\omega)=d$, so evaluating the same derivative identity at $r=h$ yields $d = E S_h$, hence $S_h = d/E$ and $\tau_b = dW_b/g_b = S_h/S_r$.
+
+At the principal embedding $\omega=e^{2\pi i/d}$, put $\theta=\pi/d$. Since $1-e^{2im\theta} = -2i\sin(m\theta)e^{im\theta}$, every ratio in $t_k$ has argument $-\theta$:
+\begin{equation}
+\label{eq:tk-polar}
+t_k = a_k e^{-ik\theta},\qquad a_k = \prod_{j=1}^k \frac{\sin((2j-1)\theta)}{\sin(2j\theta)} > 0 \qquad (0\le k\le h).
+\end{equation}
+Because $-k\theta\in[-h\theta,0]\subset(-\pi/2,0]$, every term of $S_r$ has strictly positive real part, so $\operatorname{Re}S_r>0$ and $g_b\neq 0$. Moreover, since $r<h$,
+\[
+\operatorname{Im}\bigl((S_h-S_r)\overline{S_r}\bigr)
+= -\sum_{j=r+1}^h \sum_{k=0}^r a_j a_k \sin\bigl((j-k)\theta\bigr) < 0,
+\]
+as $0<(j-k)\theta\le h\theta<\pi/2$. Dividing by $|S_r|^2$ yields $\operatorname{Im}\tau_b = \operatorname{Im}(S_h/S_r) < 0$. Algebraic nonvanishing ($g_b\neq 0$) and nonreality ($\tau_b\neq\overline{\tau_b}$) transfer to every primitive embedding because cyclotomic Galois automorphisms commute with complex conjugation.
+\end{proof}
+
+\begin{remark}
+In fact, $t_{h-k}=t_h\overline{t_k}$ with $|t_h|=1$ gives a complementary symmetry between $b$ and $b'=d-b-1$: $\tau_{b'}=\overline{\tau_b/(\tau_b-1)}$ and $|\tau_b-1|^2|\tau_{b'}-1|^2=1$. Since $|S_j|$ is strictly increasing in $j$, $|\tau_b-1|\le 1$ holds precisely on the upper half $2b\ge d-1$. The $2$-adic theorem below removes this upper-half restriction completely.
+\end{remark}
+
+\begin{proof}[Proof of Theorem~\ref{thm:2adic-main}]
+Normalize $v_2(2)=1$. Applying two steps of~\eqref{eq:He-def} to $\He_{2m}(x)=U_m(x^2)$ and $\He_{2m+1}(x)=xV_m(x^2)$ yields the monic integral recurrences
+\begin{align*}
+U_{m+1}(y) &= (y-4m-1)U_m(y) - 2m(2m-1)U_{m-1}(y),\\
+V_{m+1}(y) &= (y-4m-3)V_m(y) - 2m(2m+1)V_{m-1}(y),
+\end{align*}
+with $U_0=V_0=1$, $U_1=y-1$, and $V_1=y-3$. Note that $\mathcal{W}_m^R=R_m'R_{m-1}-R_mR_{m-1}'$ is monic of degree $2m-2$, with $\mathcal{W}_1^R=1$.
+
+\smallskip
+\noindent\emph{Proof of~(a):} Choose $\pi\in\overline{\Q}_2$ with $\pi^2=2$ (so $v_2(\pi)=1/2$), and define
+\[
+P_m(X) = \pi^{-m} U_m(1+\pi X),\qquad Q_m(X) = \pi^{-m} V_m(1+\pi X).
+\]
+Their recurrences are
+\begin{align*}
+P_{m+1}(X) &= (X - 2\pi m)P_m(X) - m(2m-1)P_{m-1}(X),\\
+Q_{m+1}(X) &= (X - \pi(2m+1))Q_m(X) - m(2m+1)Q_{m-1}(X),
+\end{align*}
+with $P_0=Q_0=1$, $P_1=X$, and $Q_1=X-\pi$. Thus $P_m,Q_m\in\Z[\pi][X]$. Reducing modulo the uniformizer $\pi$ of $\Q_2(\pi)$ (whose residue field is $\F_2$), both $P_m$ and $Q_m$ satisfy the same recurrence $\rho_{m+1}=X\rho_m + (m\bmod 2)\rho_{m-1}$ with $\rho_0=1,\rho_1=X$, whose unique solution in $\F_2[X]$ is
+\[
+\rho_m(X) = X^{m\bmod 2}(X^2+1)^{\lfloor m/2\rfloor}.
+\]
+By the chain rule, for $\widetilde{R}\in\{P,Q\}$,
+\[
+\pi^{-(2m-2)}\mathcal{W}_m^R(1+\pi X) = \widetilde{R}_m'(X)\widetilde{R}_{m-1}(X) - \widetilde{R}_m(X)\widetilde{R}_{m-1}'(X) \in \Z[\pi][X].
+\]
+Differentiation commutes with reduction modulo $\pi$. In characteristic $2$, the derivative of $\rho_{2k}=(X^2+1)^k$ vanishes identically, whereas $\rho_{2k+1}'=(X^2+1)^k$. Since one of $m,m-1$ is odd and the other is even,
+\[
+\pi^{-(2m-2)}\mathcal{W}_m^R(1+\pi X) \equiv (X^2+1)^{m-1} \pmod{\pi}.
+\]
+Hence this monic integral polynomial in $\Z[\pi][X]$ has unit constant term ($1\bmod\pi$). Every root $X\in\overline{\Q}_2$ must have $v_2(X)=0$: if $v_2(X)<0$, the leading term $X^{2m-2}$ would uniquely minimize $v_2$, while if $v_2(X)>0$, the unit constant term would uniquely minimize $v_2$. Since $y-1=\pi X$, every root $y$ satisfies $v_2(y-1)=v_2(\pi)=1/2$. Writing $\mathcal{W}_m^R(1+z)=\sum_{j=0}^{2m-2}c_j z^j$, integrality gives $v_2(c_j)\ge m-1-j/2$, with equality at $j=0$ and $j=2m-2$, establishing the single-segment Newton polygon.
+
+\smallskip
+\noindent\emph{Proof of~(b):} Let $\tau\in K\subseteq\Q_2^{\mathrm{nr}}$ and suppose $x\neq 0$ is a repeated root of $J(x)=J_{A+1}(x;\tau)=x\He_A(x)-A\tau\He_{A-1}(x)$. Consecutive Hermite polynomials are coprime by~\eqref{eq:He-def}, so $\He_{A-1}(x)\neq 0$. Using $\He_A'=A\He_{A-1}$ and $\He_A''=x\He_A'-A\He_A$ (from differentiating~\eqref{eq:He-def}), we obtain
+\[
+J'(x) = (1+A\tau)\He_A(x) + A(1-\tau)x\He_{A-1}(x).
+\]
+Eliminating $\He_A(x)$ between $J(x)=0$ and $J'(x)=0$ gives
+\[
+(\tau-1)x^2 = \tau(A\tau+1).
+\]
+If $\tau=1$, this yields $0=A+1$, impossible. Thus $\tau\neq 1$ and
+\[
+y := x^2 = \frac{\tau(A\tau+1)}{\tau-1} \in K.
+\]
+Writing $A=2m-1$ (odd) or $A=2m$ (even), we have
+\[
+J_{2m}(x;\tau) = U_m(y) - A(\tau-1)U_{m-1}(y),\qquad
+J_{2m+1}(x;\tau) = x\bigl(V_m(y) - A(\tau-1)V_{m-1}(y)\bigr).
+\]
+Since $x\neq 0$ is a repeated root of $J$, $y=x^2$ is a repeated root of $R_m(y)-A(\tau-1)R_{m-1}(y)$ ($R=U$ or $V$). Eliminating $A(\tau-1)$ between this polynomial and its $y$-derivative yields $\mathcal{W}_m^R(y)=0$. For $m=1$, $\mathcal{W}_1^R=1$ gives an immediate contradiction. For $m\ge 2$, part~(a) gives $v_2(y-1)=1/2$, contradicting $y\in K\subseteq\Q_2^{\mathrm{nr}}$ (since an unramified extension of $\Q_2$ has valuation group $\Z$).
+
+Finally, check $x=0$: if $A$ is odd, $J(0)=-A\tau\He_{A-1}(0)$ with $\He_{A-1}(0)\neq 0$, so $0$ is a root iff $\tau=0$, in which case $J=x\He_A$ has a double root at $0$. If $A$ is even, $J$ is odd and $J'(0)=(1+A\tau)\He_A(0)$, so $0$ is a multiple root iff $\tau=-1/A$.
+
+\smallskip
+\noindent\emph{Proof of~(c):} For any odd $d\ge 3$, choosing $f\ge 1$ with $d\mid (2^f-1)$, the field $\Q(\omega)$ embeds into the degree-$f$ unramified extension of $\Q_2$ (by Hensel lifting a primitive $d$-th root of unity from $\F_{2^f}^\times$). By Lemma~\ref{lem:partial}, $g_b\neq 0$ and $\tau_b\in\Q(\omega)$ is nonreal, hence $\tau_b\notin\{0,-1/A\}$. Part~(b) gives $\Disc_x J_{A+1}(x;\tau_b)\neq 0$.
+\end{proof}
+
+\section{Static nonvanishing and unconditional prime-power orders}
+\label{sec:prime-static}
+
+\begin{theorem}[Prime-power static nonvanishing for $b<p$]
+\label{thm:static}
+Let $p$ be an odd prime, $s\ge 1$, $d=p^s$, and $0\le b<p$. For any primitive $d$-th root of unity $\omega$:
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+\item $H_b(z;\omega)$ is squarefree.
+\item If $b$ is even, $\Res(z^d+1,H_b(z;\omega))\neq 0$.
+\item If $b$ is odd and $H_b(z;\omega)=(z+1)U_b(z)$, then $U_b$ is squarefree, $U_b(-1)\neq 0$, and $\Res(z^d+1,U_b)\neq 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Substitute $q=1+t^2$ and $z=-1+tx$ into~\eqref{eq:rs-rec}: $H_0=1$, $H_1=tx$, and
+\[
+H_n(-1+tx;1+t^2) = tx\,H_{n-1}(-1+tx;1+t^2) + \bigl((1+t^2)^{n-1}-1\bigr)(-1+tx)H_{n-2}(-1+tx;1+t^2).
+\]
+Since $(1+t^2)^{n-1}-1 = (n-1)t^2 + O(t^4)\in t^2\Z[t^2]$, induction on $b$ yields an integral polynomial $K_b\in\Z[x,t]$, monic of degree $b$ in $x$, such that
+\begin{equation}
+\label{eq:hermite-deg}
+H_b(-1+tx;1+t^2) = t^b K_b(x,t),\qquad K_b(x,0) = \He_b(x).
+\end{equation}
+Taking $x$-discriminants of~\eqref{eq:hermite-deg} gives $D_b(1+t^2) = t^{b(b-1)}\Disc_x K_b(x,t)$, whence
+\begin{equation}
+\label{eq:Db-quot}
+D_b(q) = (q-1)^{b(b-1)/2} V_b(q),\qquad V_b\in\Z[q],\qquad V_b(1)=\Disc(\He_b)=\prod_{j=1}^b j^j.
+\end{equation}
+If $D_b(\omega)=0$, then $V_b(\omega)=0$ (since $\omega\neq 1$), so the monic minimal polynomial $\Phi_{p^s}(q)$ divides $V_b(q)$ in $\Z[q]$. Evaluating at $q=1$ forces $p=\Phi_{p^s}(1)\mid \prod_{j=1}^b j^j$, impossible since $b<p$. This proves~(1).
+
+For separation against $z^d+1=\prod_{j=0}^{d-1}(z+\omega^j)$, note that at $z=-q^j$ with $q=1+t^2$, we have $z=-1+t x_j(t)$ where $x_j(t) = (1-(1+t^2)^j)/t \in t\Z[t]$, so $x_j(0)=0$.
+\begin{itemize}[leftmargin=1.5em]
+\item If $b=2r$ is even, substituting $x=x_j(t)$ into~\eqref{eq:hermite-deg} gives $H_b(-q^j;q)=(q-1)^r C_{b,j}(q)$ with $C_{b,j}\in\Z[q]$ and $C_{b,j}(1)=\He_{2r}(0)=(-1)^r(2r-1)!!$. If $H_b(-\omega^j;\omega)=0$, then $\Phi_{p^s}\mid C_{b,j}$ in $\Z[q]$, forcing $p\mid (2r-1)!!$, impossible since $b<p$. This proves~(2).
+\item If $b=2r+1$ is odd, then $H_b(z;q)=(z+1)U_b(z;q)$ in $\Z[q,z]$, and dividing~\eqref{eq:hermite-deg} by $tx$ yields $U_b(-1+tx;1+t^2)=t^{2r}L_b(x,t)$ with $L_b(x,0)=\He_{2r+1}(x)/x$. Evaluating at $x=x_j(t)$ gives
+\[
+U_b(-q^j;q) = (q-1)^r B_{b,j}(q),\qquad B_{b,j}\in\Z[q],\qquad B_{b,j}(1)=\He'_{2r+1}(0)=(-1)^r(2r+1)!! = (-1)^r b!!
+\]
+(Notice that $\He_{2r+1}(x)/x$ at $x=0$ equals $(2r+1)\He_{2r}(0)=(-1)^r(2r+1)(2r-1)!!=(-1)^r b!!$.) If $U_b(-\omega^j;\omega)=0$ for any $0\le j<d$ (including $j=0$, i.e., $U_b(-1)=0$), then $\Phi_{p^s}\mid B_{b,j}$ in $\Z[q]$, forcing $p\mid b!!$, impossible since $b<p$. This proves~(3).
+\end{itemize}
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:prime-uncond}]
+For $A=0$, Theorem~\ref{thm:static}(1) gives $D_b(\omega)\neq 0$, so $\ord_{\Phi_d} D_b = 0$. For $A\ge 1$, Theorem~\ref{thm:static} establishes all static guards of Theorem~\ref{thm:local}, and for odd $b$ Theorem~\ref{thm:2adic-main}(c) establishes $S_A(\tau_b)\neq 0$. Thus Theorem~\ref{thm:local} yields~\eqref{eq:prime-order} unconditionally. Since $(q^{p^s}-1)/\Phi_{p^s}(q) = q^{p^{s-1}}-1$, equation~\eqref{eq:integral-quot} simplifies to $E_{n,d}(\omega)=C(\omega^{d/p}-1)^M\neq 0$. For $d=p$ prime, every $n\ge 0$ satisfies $0\le b<p$, giving the formal prime-cyclotomic factorization.
+\end{proof}
+
+\begin{example}
+For $p=7,A=1,b=5$ ($n=12$), Theorem~\ref{thm:prime-uncond} gives $\ord_{\Phi_7} D_{12}=1$ and $D_{12}'(\omega)=7\omega^{-1}C_{\mathrm{ov}}\neq 0$; for $p=11,b=7$, $\ord_{\Phi_{11}}D_{11A+7}=(11A^2-9A)/2$ for every $A\ge 0$.
+\end{example}
+
+\section{Finite-characteristic inverse pairing and five infinite composite families}
+\label{sec:finite-char}
+
+We now turn to composite orders $d=sp$, where $s\equiv 3\pmod 4$ is odd and $p$ is an odd prime with $p\nmid s$. Write $\mathcal{O}_s=\Z[\omega]$ for a primitive $s$-th root of unity $\omega$, and let $\iota\in\operatorname{Gal}(\Q(\omega)/\Q)$ denote inversion $\iota(\omega)=\omega^{-1}$. For $a=\sum_{j=0}^{\varphi(s)-1}a_j\omega^j\in\mathcal{O}_s$, define its canonical \emph{content} $\cont_s(a)=\gcd(|a_0|,\ldots,|a_{\varphi(s)-1}|)$ (with $\cont_s(0)=0$).
+
+\begin{proposition}[Single good residue component suffices]
+\label{prop:one-comp}
+Let $p$ be an odd prime, $p\nmid d$, $A=(p-1)/2$, $b=(d-1)/2$, and $n=(dp-1)/2$. Suppose that at some prime ideal $\mathfrak{p}\mid p$ of $\mathcal{O}_d$, either all separated guards ($\Delta,R$) or all overlap guards ($\Delta_U,R_U,S_A(\tau_b)$, with $g_b$ checked to be a unit before forming $\tau_b$) reduce to nonzero elements of $\mathcal{O}_d/\mathfrak{p}$. Then $D_{(dp-1)/2}(\zeta_{dp})\neq 0$ for every primitive $dp$-th root of unity $\zeta_{dp}$.
+\end{proposition}
+
+\begin{proof}
+At $\mathfrak{p}$, $d$ is a unit and $A<p$ makes $P_A=\prod_{j=1}^A j^j$ a unit. In the overlap case, $R_U\not\equiv 0\pmod{\mathfrak{p}}$ makes $g_b$ a unit, and every factor of $W_b$ is a unit because $p\nmid d$ preserves exact order $d$ in $\mathcal{O}_d/\mathfrak{p}$. Hence the relevant coefficient $C\in\{C_{\mathrm{sep}},C_{\mathrm{ov}}\}$ is nonzero modulo $\mathfrak{p}$, and in particular nonzero in characteristic zero, so Theorem~\ref{thm:local}(c) gives $D_n(q)=\Phi_d(q)^M E_{n,d}(q)$ with $E_{n,d}\in\Z[q]$ and $E_{n,d}(\omega)=Q_d(\omega)^M C$.
+
+Because $p\nmid d$, $q^d-1\bmod p$ is squarefree, so $Q_d(\omega)$ is a unit modulo $\mathfrak{p}$ and $E_{n,d}(\omega)\not\equiv 0\pmod{\mathfrak{p}}$. If $D_n(\zeta_{dp})=0$, then $\Phi_{dp}\mid D_n$, hence $\Phi_{dp}\mid E_{n,d}$ in $\Z[q]$ since $\Phi_{dp}\neq\Phi_d$. However, $\Phi_{dp}(q)\Phi_d(q)=\Phi_d(q^p)$ reduces modulo $p$ to
+\begin{equation}
+\label{eq:cyclo-ram}
+\Phi_{dp}(q)\equiv \Phi_d(q)^{p-1}\pmod p,
+\end{equation}
+forcing $E_{n,d}(\omega)\equiv 0\pmod{\mathfrak{p}}$, contradiction. Notice that monic division by $\Phi_d^M$ happens in $\Z[q]$ \emph{before} reduction modulo $p$, so no restriction $M<p-1$ is needed.
+\end{proof}
+
+\begin{proposition}[Content as a same-component nonvanishing test]
+\label{prop:content-test}
+If $p\nmid s$, then $\mathcal{O}_s/p\mathcal{O}_s$ is a product of finite fields indexed by the irreducible factors of $\Phi_s\bmod p$. For $a=a_1\cdots a_t\in\mathcal{O}_s$, we have $p\nmid \cont_s(a)$ if and only if $a_1,\ldots,a_t$ are \emph{simultaneously} nonzero in at least one common field factor.
+\end{proposition}
+
+\begin{proof}
+Squarefreeness of $\Phi_s\bmod p$ and the Chinese remainder theorem give the field decomposition. An element $a=\sum_{j=0}^{\varphi(s)-1}a_j\omega^j$ vanishes in $\mathcal{O}_s/p\mathcal{O}_s$ iff $p\mid a_j$ for all $j$, i.e., $p\mid \cont_s(a)$; its image is nonzero iff it is nonzero in at least one factor, where a product is nonzero iff every factor is nonzero.
+\end{proof}
+
+\begin{theorem}[Finite-characteristic inverse pairing and exact exception]
+\label{thm:charp-pair}
+Let $p$ be an odd prime and $A=(p-1)/2$. Over any field of characteristic $p$, let $\tau,\tau'\neq 0$ satisfy
+\begin{equation}
+\label{eq:inv-tau}
+\frac{1}{\tau} + \frac{1}{\tau'} = 1.
+\end{equation}
+Then at least one of $J_{A+1}(y;\tau)$ and $J_{A+1}(y;\tau')$ is squarefree over the algebraic closure, \emph{except} in the unique case
+\begin{equation}
+\label{eq:charp-exc}
+p\equiv 1\pmod 4,\qquad \tau=\tau'=2,
+\end{equation}
+in which both polynomials have a root of multiplicity exactly $3$ at $y=0$.
+\end{theorem}
+
+\begin{proof}
+Put $H=\He_A$. Since $A<p$, consecutive Hermite polynomials are coprime by~\eqref{eq:He-def} and $H'=A\He_{A-1}$, so $\gcd(H,H')=1$ and $H\neq 0$ at any root of $J=yH-\tau H'$. Equation~\eqref{eq:inv-tau} forces $\tau\neq 1$ and $\tau'=\tau/(\tau-1)$. Since $A=-1/2$ in characteristic $p$, the multiple-root relation $(\tau-1)y^2=\tau(A\tau+1)$ becomes
+\begin{equation}
+\label{eq:charp-y2}
+y^2 = t(\tau) := \frac{\tau(\tau-2)}{2(1-\tau)},\qquad t(\tau') = -t(\tau).
+\end{equation}
+Suppose both $J(y;\tau)$ and $J(y;\tau')$ have a multiple root, with $y\neq 0$ for $\tau$. Choose $i$ with $i^2=-1$ in the algebraic closure and set $V(y)=i^{-A}H(iy)$; by~\eqref{eq:charp-y2} and parity, $J(y;\tau')$ has a multiple root at $iy$, and both $H(y)$ and $V(y)$ are nonzero. Differentiating using $H''=yH'-AH$ and $V''=-yV'+AV$ yields
+\[
+\bigl[H'V - HV' - yHV\bigr]' = -(2A+1)HV = 0
+\]
+because $2A+1=p=0$. Since the bracket is an odd polynomial of degree $p$ with leading coefficient $-1$, and a derivative-zero polynomial of degree $\le p$ in characteristic $p$ has only a constant and a $y^p$ term, we obtain the exact identity
+\begin{equation}
+\label{eq:charp-wronskian}
+H'V - HV' - yHV = -y^p.
+\end{equation}
+At the alleged multiple roots, $H'(y)/H(y)=y/\tau$ and $V'(y)/V(y)=-y/\tau'$ (from $J(iy;\tau')=0$). Dividing~\eqref{eq:charp-wronskian} by $H(y)V(y)\neq 0$ yields $y(1/\tau + 1/\tau' - 1)=0$ on the left by~\eqref{eq:inv-tau}, contradicting $-y^p/(HV)\neq 0$.
+
+Thus simultaneous multiple roots can occur only at $y=0$, which by~\eqref{eq:charp-y2} forces $\tau=\tau'=2$. If $A$ is odd ($p\equiv 3\pmod 4$), $H'(0)\neq 0$ and $J(0;2)=-2H'(0)\neq 0$, so no exception occurs. If $A$ is even ($p\equiv 1\pmod 4$, hence $p\ge 5$), $H(0)=c_0\neq 0$, $J$ is odd, and $J'(0;2)=(1+2A)c_0=0$. From $H''-yH'+AH=0$, the Taylor coefficients of $H$ satisfy $c_2=-Ac_0/2$ and $c_4=A(A-2)c_0/24$, so the $y^3$ coefficient of $yH-2H'$ is $(c_2-8c_4)=A(1-2A)c_0/6 = -c_0/6\neq 0$ (valid even for $p=5,A=2$ since $6$ is a unit mod $p$). Hence the multiplicity at $y=0$ is exactly $3$.
+\end{proof}
+
+Now let $s=4r+3$, $b=2r+1=(s-1)/2$, and define in $\mathcal{O}_s$:
+\begin{equation}
+\label{eq:cs-plus}
+\begin{aligned}
+U_s(z) &= H_b(z;\omega)/(z+1), & g_s &= U_s(-1), & v_s &= \poch{\omega^2}{\omega^2}{r}\poch{\omega}{\omega^2}{b} = sW_b,\\
+\Gamma_s &= \Disc(U_s)\Res(z^s+1,U_s), & \delta_s &= 2g_s - v_s, & c_s^+ &= \cont_s(\Gamma_s\Gamma_s^\iota\delta_s).
+\end{aligned}
+\end{equation}
+(For $p\equiv 3\pmod 4$, $\delta_s$ is unnecessary and one may use $c_s^{\mathrm{pair}}=\cont_s(\Gamma_s\Gamma_s^\iota)$.) By Lemma~\ref{lem:inv-id} proved in Section~\ref{sec:char0-half}, the integral denominator-free identity
+\begin{equation}
+\label{eq:gv-int}
+g_s v_s^\iota + g_s^\iota v_s = v_s v_s^\iota
+\end{equation}
+holds in $\mathcal{O}_s$ and therefore survives reduction modulo every prime ideal.
+
+\begin{corollary}[Augmented overlap bridge]
+\label{cor:bridge}
+Let $s\equiv 3\pmod 4$ and let $p\equiv 1\pmod 4$ be prime with $p\nmid s$. If $c_s^+\neq 0$ and $p\nmid c_s^+$, then $H_{(sp-1)/2}(z;\zeta_{sp})$ is squarefree for every primitive $sp$-th root of unity $\zeta_{sp}$. (For $p\equiv 3\pmod 4$, the same holds if $c_s^{\mathrm{pair}}\neq 0$ and $p\nmid c_s^{\mathrm{pair}}$.)
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{prop:content-test}, choose a residue field $\mathcal{O}_s/\mathfrak{p}$ where $\Gamma_s$, $\Gamma_s^\iota$, and $\delta_s$ are all nonzero. Because $\Res(z^s+1,U_s)$ contains the factor $U_s(-1)=g_s$, both $g_s$ and $g_s^\iota$ are units there; both $v_s$ and $v_s^\iota$ are also units since $p\nmid s$. Reducing~\eqref{eq:gv-int} gives $1/\tau + 1/\tau'=1$ for $\tau=v_s/g_s$ and $\tau'=v_s^\iota/g_s^\iota$, and $\delta_s\not\equiv 0$ excludes $\tau=2$. Theorem~\ref{thm:charp-pair} selects one of $\omega,\omega^{-1}$ at which $S_A\not\equiv 0\pmod{\mathfrak{p}}$, and Proposition~\ref{prop:one-comp} completes the proof.
+\end{proof}
+
+To compute $c_s^+$ efficiently in exact integer arithmetic, observe that reciprocity makes $U_s$ monic reciprocal of degree $2r$, so $U_s(z)=z^r P_s(z+z^{-1})$ for a unique monic $P_s(t)\in\mathcal{O}_s[t]$ of degree $r$. Defining $C_1(t)=1$, $C_3(t)=t-1$, $C_{s+2}(t)=tC_s(t)-C_{s-2}(t)$ gives $z^s+1=(z+1)z^{(s-1)/2}C_s(z+z^{-1})$, and pairing reciprocal roots yields the exact identities
+\begin{equation}
+\label{eq:recip-red}
+\Disc U_s = P_s(2)P_s(-2)(\Disc P_s)^2,\qquad
+\Res(z^s+1,U_s) = (-1)^r P_s(-2)\Res(P_s,C_s)^2,
+\end{equation}
+so $\Gamma_s = (-1)^r P_s(2)P_s(-2)^2[\Disc(P_s)\Res(P_s,C_s)]^2$. Exact integer evaluation in $\Z[q]/(\Phi_s(q))$ (reproduced in \texttt{verify\_rogers\_szego.py}) gives
+\begin{equation}
+\label{eq:5fam-vals}
+\begin{array}{c|ccccc}
+s & 3 & 7 & 11 & 15 & 19\\ \hline
+c_s^+ & 1 & 7^2 & 11^5 & 3^{12}5^9 & 19^{11}
+\end{array}
+\end{equation}
+Every prime dividing $c_s^+$ already divides $s$. Applying Corollary~\ref{cor:bridge} immediately yields Theorem~\ref{thm:composite-main}(a) (note that for $s=15$, the condition $p\nmid s$ excludes $p=5$).
+
+\section{Characteristic-zero half-residual-degree refinement}
+\label{sec:char0-half}
+
+For completeness, we prove~\eqref{eq:gv-int} and record the independent characteristic-zero analytic disk and resonance theorems at half residual degree $b=(d-1)/2$.
+
+\begin{lemma}[Inverse parameter identity]
+\label{lem:inv-id}
+Let $d=4r+3$, $b=2r+1=(d-1)/2$, $Q=\omega^2$, $a_j=\poch{\omega}{Q}{j}/\poch{Q}{Q}{j}$, and $M_0=\poch{\omega}{Q}{b}$. Then
+\[
+v_d := dW_b = \poch{Q}{Q}{r}M_0,\qquad g_b = \poch{Q}{Q}{r}\sum_{j=0}^r a_j,\qquad
+g_b v_d^\iota + g_b^\iota v_d = v_d v_d^\iota.
+\]
+Moreover, at every primitive complex embedding, $g_b\neq 0$, $2g_b-v_d\neq 0$, and $|1-\tau_b|=1$.
+\end{lemma}
+
+\begin{proof}
+The formulas for $v_d$ and $g_b$ follow from $d=\prod_{k=1}^{d-1}(1-\omega^k)$ and Lemma~\ref{lem:partial}. Since $\omega = Q^{-b}$ (as $Q^b=\omega^{4r+2}=\omega^{-1}$), the finite $q$-binomial theorem gives $\sum_{j=0}^b a_j = \poch{\omega}{Q}{b}=M_0$. Direct inversion gives $a_j^\iota = \omega^j a_j$ and $a_{b-j}=(M_0/M_0^\iota)a_j^\iota$. Splitting $\sum_{j=0}^b a_j=M_0$ into $0\le j\le r$ and $r+1\le j\le b$ yields $g_b/v_d + g_b^\iota/v_d^\iota = 1$, proving~\eqref{eq:gv-int}. At $\omega=e^{2\pi i/d}$, each $a_j/M_0$ ($0\le j\le r$) has argument $(b/2-j)\pi/d\in(0,\pi/4)$, so $\operatorname{Re}(g_b/v_d)>0$ and $\operatorname{Im}(g_b/v_d)>0$, giving $g_b\neq 0$ and $2g_b-v_d\neq 0$; Galois conjugacy transfers both to all primitive embeddings, where $\iota$ is complex conjugation and $1/\tau_b+1/\overline{\tau_b}=1 \iff |1-\tau_b|=1$.
+\end{proof}
+
+\begin{lemma}[Complex disk of simple Hermite combinations]
+\label{lem:disk}
+For every $A\ge 1$ and $\tau\in\C$, $J_{A+1}(y;\tau)=y\He_A(y)-\tau\He_A'(y)$ is squarefree over $\C$ whenever $\tau\neq 0$ and $|1-\tau|\le \sqrt{(A+1)/A}$.
+\end{lemma}
+
+\begin{proof}
+Since $\He_A$ has real, simple, symmetric roots (as the characteristic polynomial of a real symmetric tridiagonal Jacobi matrix), setting $z=y^2$ gives
+\[
+f(z) := \frac{\He_A'(y)}{y\He_A(y)} = \sum_j \frac{w_j}{z-a_j},
+\]
+with $a_j\ge 0$ and positive weights $w_j\in\{1,2\}$. At a nonzero multiple root with $\tau\neq 0$, $f(z)=1/\tau$, $f'(z)=0$, and $(\tau-1)z=\tau(A\tau+1)$, so $\tau\neq 1$; putting $\sigma=1-\tau$ yields $z = (2A+1) - A\sigma - (A+1)/\sigma$. Comparing imaginary parts gives $\operatorname{Im} z\sum_j w_j/|z-a_j|^2 = \operatorname{Im}\tau/|\tau|^2 = -\operatorname{Im}\sigma/|\tau|^2$. For nonreal $\tau$, $\operatorname{Im}z$ and $\operatorname{Im}\sigma$ have opposite signs, whereas $\operatorname{Im}z = \operatorname{Im}\sigma\bigl((A+1)/|\sigma|^2 - A\bigr)$, forcing $|\sigma|^2 > (A+1)/A$. For real nonzero $\tau$, $z$ must be real, contradicting $f'(z)=-\sum_j w_j/(z-a_j)^2<0$. Finally, $y=0$ is a multiple root only at $\tau=0$ (odd $A$) or $\tau=-1/A$ (even $A$), both excluded.
+\end{proof}
+
+\begin{lemma}[Half-order resonance]
+\label{lem:resonance}
+Let $N=2m+1\ge 3$, $q$ a primitive $N$-th root of unity, and $T_m(z)=(-1)^m H_m(-z;q)$. Then
+\[
+\gcd(T_m(z),\, z^N-1) = \begin{cases} 1, & m\text{ even},\\ z-1, & m\text{ odd}, \end{cases}
+\]
+and in the odd case $z=1$ is a simple root of $T_m$.
+\end{lemma}
+
+\begin{proof}
+Take first $q=e^{2\pi i/N}$. Define $S_0=1$, $S_1=x$, $S_n=xS_{n-1}-(1-q^{n-1})S_{n-2}$; comparing recurrences gives $T_n(z)=(i\sqrt{z})^n S_n((z-1)/(i\sqrt{z}))$, which maps $|z|=1$ to real $x$. Now $S_m(x)=\det(xI-\mathcal{J})$ where $\mathcal{J}$ is the $m\times m$ symmetric tridiagonal matrix with off-diagonal entries $c_j=\sqrt{2\sin(\pi j/N)}\exp(i[-\pi/4+\pi j/(2N)])$ ($1\le j<m$). Factor $\mathcal{J}=DR_0D$, where $R_0$ is real symmetric with off-diagonal entries $|c_j|>0$ and $D=\operatorname{diag}(e^{i\theta_j})_{j=0}^{m-1}$ with $\theta_j=-\pi/8+\pi(2j+1)/(8N)\in(-\pi/8,0)$. Then $B=D^{-2}$ has strictly positive real and imaginary diagonal entries.
+
+If $t\in\R\setminus\{0\}$ were an eigenvalue of $\mathcal{J}$, then $R_0 v = t B v$ for some $v\neq 0$; taking inner product with $v$ makes $v^*R_0v\in\R$ while $\operatorname{Im}(t\,v^*Bv)=t\,v^*\operatorname{Im}(B)v\neq 0$, contradiction. Thus the only possible real root of $S_m$ is $t=0$. For even $m$, $\det R_0\neq 0$ (product of alternate squared edges), so $S_m(0)\neq 0$. For odd $m$, $\ker R_0$ is $1$-dimensional spanned by a real vector $v_0$; restricting to $v_0^\perp$ yields an invertible real block, so the linear term of $\det(R_0-tB)$ is a nonzero real scalar times $v_0^T B v_0\neq 0$, making $t=0$ a simple root. Since $(z-1)/(i\sqrt{z})$ has nonzero derivative at $z=1$, the gcd holds at $q=e^{2\pi i/N}$, and Galois conjugacy transfers the algebraic gcd and simplicity to every primitive $N$-th root of unity.
+\end{proof}
+
+Notice that Lemmas~\ref{lem:inv-id}--\ref{lem:resonance} give an independent proof that at half residual degree $b=(d-1)/2$ ($d\equiv 3\pmod 4$), squarefreeness of $H_b(z;\omega)$ alone implies all hypotheses of Theorem~\ref{thm:local}(b) for every $A\ge 1$.
+
+\section{Exact certification at $76$ odd composite orders and complementary fixed nodes}
+\label{sec:76-cert}
+
+\begin{proof}[Proof of Theorem~\ref{thm:composite-main}(b)]
+Fix an odd composite order $d$ and a primitive complex $d$-th root $\omega$. For any prime $\ell$ with $d\mid (\ell-1)$ and any element $w\in\F_\ell^\times$ of exact multiplicative order $d$ (verified by $w^d=1$ and $w^{d/r}\neq 1$ for every prime $r\mid d$), the specialization $\Z[\omega]\to\F_\ell$, $\omega\mapsto w$, is a well-defined ring homomorphism because $\ell\nmid d$ and $w$ is a root of $\Phi_d\bmod\ell$.
+
+For every $1\le b<d$, $H_b(z;\omega)$ is monic, and for odd $b$, $z+1$ divides $H_b$ integrally; set $U_b=H_b$ for even $b$ and $U_b=H_b/(z+1)$ for odd $b$. If in $\F_\ell[z]$ we verify that $\gcd(H_b(z;w), H_b'(z;w))=1$ and $\gcd(z^d+1,H_b(z;w))=(z+1)^{b\bmod 2}$, then the characteristic-zero resultants $\Res(H_b,H_b')$ and $\Res(z^d+1,U_b)$ have nonzero images in $\F_\ell$ (as resultants of monic polynomials commute with ring homomorphisms) and are therefore nonzero in $\Z[\omega]$. Galois conjugacy transports both nonvanishing statements to every primitive complex $d$-th root of unity.
+
+The accompanying standalone C++17 verifier (\texttt{certify\_composite\_orders.cpp} with \texttt{composite\_witnesses.csv}) executes this check across all $74$ odd composite orders $d\le 255$ plus $d=289=17^2$ and $d=343=7^3$ ($76$ orders; $10{,}860$ nonconstant residuals $1\le b<d$). For redundancy, each order is verified independently at \emph{two distinct primes} $\ell_1\neq\ell_2$ by \emph{two different algorithms} ($21{,}720$ exact checks):
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+\item At $(\ell_1,w_1)$: coefficients via $q$-Pascal $a_{b,k}=a_{b-1,k}+w_1^{b-k}a_{b-1,k-1}$, Euclidean gcd with the derivative, and direct Horner evaluation at all $d$ roots $-w_1^j$ ($0\le j<d$).
+\item At $(\ell_2,w_2)$: coefficients via contiguous $q$-Pochhammer ratios $a_{b,k}/a_{b,k-1}=(1-w_2^{b-k+1})/(1-w_2^k)$, Euclidean gcd with the derivative, and Euclidean gcd with $z^d+1$.
+\end{enumerate}
+All $21{,}720$ checks pass. Composing these static conditions with Theorem~\ref{thm:local} and the uniform overlap simplicity of Theorem~\ref{thm:2adic-main}(c) establishes $\ord_{\Phi_d(q)}D_n(q) = d\binom{A}{2}+A(b\bmod 2)$ for all $76$ orders and every $n=Ad+b\ge 0$.
+\end{proof}
+
+We also record an exact symmetry linking complementary residual degrees on the fixed-node grid $z^d=-1$.
+
+\begin{proposition}[Complementary fixed-node symmetry]
+\label{prop:comp-node}
+Let $\omega$ have odd order $d$, let $z^d=-1$, and set $C_k = \prod_{j=1}^k(1-\omega^{-j})$ ($0\le k<d$). Then
+\begin{equation}
+\label{eq:comp-node}
+C_k\, H_{d-1-k}(z;\omega) = z^{-k} H_{d-1}(z;\omega) H_k(z;\omega^{-1}).
+\end{equation}
+In particular, for odd $d$, $H_{d-1-k}(z;\omega)=0 \iff H_k(z;\omega)=0$ on $z^d=-1$, so fixed-node separation holds for all $b<d$ once verified for $b\le (d-1)/2$.
+\end{proposition}
+
+\begin{proof}
+Write $z=t^2$ ($|t|=1$), $x=t+t^{-1}\in\R$, and $P_b(x;q)=t^{-b}H_b(t^2;q)$. Then~\eqref{eq:rs-rec} becomes the three-term recurrence $P_{b+1}=xP_b-(1-q^b)P_{b-1}$ (cf.~\cite{AKK09,dBS86}). At $q=\omega$ and $z^d=-1$, $P_d=0$, and adjacent backwards recurrence with $1-\omega^b\neq 0$ ($1\le b<d$) forces $P_{d-1}\neq 0$. Defining $Q_k := C_k P_{d-1-k}/P_{d-1}$, direct substitution shows $Q_0=1$, $Q_1=x$, and $Q_{k+1}=xQ_k-(1-\omega^{-k})Q_{k-1}$, which is the forward recurrence with $q=\omega^{-1}$; hence $Q_k = P_k(x;\omega^{-1})$, yielding~\eqref{eq:comp-node}. Because $x$ is real, $P_k(x;\omega^{-1})=\overline{P_k(x;\omega)}$ in the principal embedding, so $H_{d-1-k}$ and $H_k$ share the exact same vanishing support on $z^d=-1$.
+\end{proof}
+
+\section{Relation to prior work and open conjecture}
+\label{sec:prior}
+
+We clarify the exact relationship between our results and the orthogonal-polynomial literature:
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Static root-of-unity factorization and recurrence:} The recurrence~\eqref{eq:rs-rec} and static factorization~\eqref{eq:qlucas} are classical ($q$-Lucas / Rogers--Szeg\H{o} / continuous $q$-Hermite; see Lubinsky--Saff~\cite[Lemmas~4.1 and~4.5]{LS87}, Sagan~\cite[Theorem~2.2]{Sag92}, and Atakishiyeva--Atakishiyev--Koornwinder~\cite[\S2]{AKK09}). Spiridonov--Zhedanov~\cite{SZ97} analyze terminal-degree ($n=d$) zeros and orthogonality of Askey--Wilson polynomials as $q$ approaches a root of unity, noting explicitly that complex recurrence coefficients do not guarantee simple roots at lower degrees.
+\item \emph{Ordinary vs.\ $q$-difference discriminants:} Ismail and Witte~\cite[(5.12)--(5.17)]{IW01} (see also~\cite{Ism01}) compute the \emph{$q$-difference discriminant} $D(H_n,q)$ of Rogers--Szeg\H{o} polynomials, which uses a $q$-difference lowering operator rather than $\partial/\partial z$. As $H_2$ and $H_3$ already demonstrate ($H_3(z;\omega_3)=z^3+1$ has ordinary discriminant $-27$ but vanishing $q$-discriminant), the $q$-discriminant cannot replace $D_n(q)$ or certify ordinary squarefreeness.
+\item \emph{Quasi-Hermite / Laguerre discriminants and Wronskians:} Writing $J_{2m}(y;\tau)=2^m\mathcal{P}_m(y^2/2)$ and $J_{2m+1}(y;\tau)=y2^m\mathcal{P}_m(y^2/2)$ reduces the standalone algebraic formula for $\Disc_y J_{A+1}(y;\tau)$ to the quasi-Laguerre discriminant theorem of Sawa--Uchida~\cite[Theorem~3.6]{SU19}. Likewise, parity Hermite Wronskians and odd-prime congruences appear in G\'omez-Ullate--Grandati--Milson~\cite{GGM18}, Bonneux--Dunning--Stevens~\cite{BDS20}, Grosu--Grosu~\cite[Theorems~7--8]{GG20}, and Clarkson--Dunning~\cite[Eq.~(3.3)]{CD23}. What is new here is the exact Rogers--Szeg\H{o} moving-$q$ parameter $\tau_b=dW_b/g_b$, the shifted $2$-adic valuation $v_2(y-1)=1/2$ in Theorem~\ref{thm:2adic-main}(a) (note that~\cite{GG20} assumes $p>\max\{2,2m-1\}$), and the resulting uniform unramified exclusion for all odd $d\ge 3$.
+\item \emph{Zhedanov (1997):} Zhedanov~\cite{Zhe97} studies discrete orthogonality of continuous $q$-Hermite, Rogers--Szeg\H{o}, and Stieltjes--Wigert polynomials on regular polygons with Gauss-sum weights. Only its bibliographic record, abstract, and citations in~\cite{AKK09} were accessible during preparation; we note this transparently without attributing unverified equations to~\cite{Zhe97}.
+\end{itemize}
+
+In light of Theorems~\ref{thm:2adic-main}, \ref{thm:prime-uncond}, and~\ref{thm:composite-main}, only the static residual conditions ($\Disc H_b(z;\omega)\neq 0$ and $\Res(z^d+1, U_b)\neq 0$ for $b\ge p$) remain open at general odd composite orders. We conclude with the natural conjecture supported by all $76$ certified composite orders and all five infinite families:
+
+\begin{conjecture}[Universal odd-order ordinary discriminant valuation]
+\label{conj:all-odd}
+For every odd integer $d\ge 1$, every primitive $d$-th root of unity $\omega$, and every $0\le b<d$, the residual polynomial $H_b(z;\omega)$ is squarefree and satisfies $\gcd(H_b(z;\omega),z^d+1)=(z+1)^{b\bmod 2}$. Consequently, for every odd $d\ge 1$ and every $n=Ad+b\ge 0$ ($0\le b<d$),
+\[
+\ord_{\Phi_d(q)} \Disc_z H_n(z;q) = d\binom{A}{2} + A(b\bmod 2).
+\]
+\end{conjecture}
+
+\section*{Data and code availability}
+Two standalone verification programs are publicly available at \url{https://github.com/AgentSlop-Si/rogers-szego-discriminants}: (1) \texttt{certify\_composite\_orders.cpp} with \texttt{composite\_witnesses.csv} (C++17 standard library only), reproducing all $21{,}720$ dual-witness checks of Theorem~\ref{thm:composite-main}(b); and (2) \texttt{verify\_rogers\_szego.py} (Python 3 standard library only), independently verifying the shifted $2$-adic Newton polygon of Theorem~\ref{thm:2adic-main}(a), small exact discriminants $D_2$--$D_6$, the characteristic-$p$ Wronskian identity~\eqref{eq:charp-wronskian} and $\tau=2$ triple zero, the Hermite degeneration constants of Theorem~\ref{thm:static}, and the five exact augmented contents $c_s^+$ in~\eqref{eq:5fam-vals}.
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}
