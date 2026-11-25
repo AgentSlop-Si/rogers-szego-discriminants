@@ -9,7 +9,8 @@
 \usepackage[margin=1.05in]{geometry}
 \usepackage{microtype}
 \usepackage{xcolor}
-\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[colorlinks=true,breaklinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
 
 \numberwithin{equation}{section}
 
@@ -676,7 +677,11 @@ For every odd integer $d\ge 1$, every primitive $d$-th root of unity $\omega$, a
 \end{conjecture}
 
 \section*{Data and code availability}
-All verification artifacts are publicly available at \url{https://github.com/AgentSlop-Si/rogers-szego-discriminants}:
+All verification artifacts are publicly available at
+\begin{center}
+\url{https://github.com/AgentSlop-Si/rogers-szego-discriminants}
+\end{center}
+and consist of:
 \begin{enumerate}[label=(\arabic*),leftmargin=2em]
 \item A standalone C++17 verifier (\texttt{certify\_composite\_orders.cpp} with \texttt{composite\_witnesses.csv}, standard library only) reproducing all $21{,}720$ dual-witness checks of Theorem~\ref{thm:composite-main}(b).
 \item A standalone Python verification script (\texttt{verify\_rogers\_szego.py}, standard library only) independently verifying the shifted $2$-adic Newton polygon of Theorem~\ref{thm:2adic-main}(a), small exact discriminants $D_2$--$D_6$, the characteristic-$p$ Wronskian identity~\eqref{eq:charp-wronskian} and $\tau=2$ triple zero, the Hermite degeneration constants of Theorem~\ref{thm:static}, and all five exact augmented contents $c_s^+$ in~\eqref{eq:5fam-vals}.
