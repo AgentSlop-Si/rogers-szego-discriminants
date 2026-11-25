@@ -4,8 +4,8 @@
   Zero-dependency Lean 4 formal verification companion to:
   "Moving-Root Splitting, 2-Adic Wronskians, and Ordinary z-Discriminants of
    Rogers-Szego Polynomials at Roots of Unity"
-  by Daniyar Kuttymbek, Adilkhan Kuttymbek, Amina Kolpenova,
-  Mukhammadali Kottumbekov, and Dayana Kuttymbek.
+  by Daniyar Kuttymbek, Adilkhan Kuttymbek, Dayana Kuttymbek,
+  Amina Kolpenova, and Mukhammadali Kottumbekov.
 
   Uses Lean 4 core (`Init`) only — no Mathlib or external dependencies required.
   Verify with: `lean RogersSzegoDiscriminants.lean`
