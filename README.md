@@ -5,6 +5,7 @@
 - `references.bib` — Clean BibTeX bibliography.
 - `certify_composite_orders.cpp` + `composite_witnesses.csv` — Standalone C++17 (stdlib only) dual-witness verifier certifying all 76 odd composite orders (`d <= 255` plus `d=289, 343`; 10,860 nonconstant residuals; 21,720 exact finite-field checks).
 - `verify_rogers_szego.py` — Standalone Python 3 (stdlib only) verifier checking the 2-adic Newton polygons of parity-Hermite Wronskians, characteristic-$p$ Wronskian identity and $\tau=2$ triple zero, exact augmented contents $c_s^+$ for $s\in\{3,7,11,15,19\}$, exact small $\mathbb{Z}[q]$ discriminants $D_2$--$D_6$, and Hermite degeneration constants.
+- `RogersSzegoDiscriminants.lean` — Zero-dependency Lean 4 formal verifier (core `Init` only, verified in Lean 4.36.0 with zero `sorry` and pure kernel reduction) symbolically proving Theorem 1.2(a) ($\pi^{-(2m-2)}\mathcal{W}_m^R(1+\pi X)\equiv (X^2+1)^{m-1}\pmod\pi$ and unit constant term in $\mathbb{Z}[\pi][X]$ for all $m\ge 1$), the discriminant exponent identities of Theorem 1.1, the $H_2$ ordinary-vs.-$q$-discriminant separation, and the inverse-pair antisymmetry of Eq. (6.4); and kernel-verifying the unscaled $2$-adic Newton polygons ($m=2,\ldots,6$), the characteristic-$p$ Wronskian and $\tau=2$ triple-zero dichotomy ($3\le p\le 19$), the exact $\mathbb{Z}[\omega]/(\Phi_s)$ inverse identity and augmented contents $c_s^+$ for $s\in\{3,7,11\}$, and dual-witness/dual-algorithm finite-field certifications from `composite_witnesses.csv` for $d\in\{9,15,21,25\}$.
 
 ## How to Compile PDF
 1. Upload `main.tex` and `references.bib` to Overleaf (or compile locally with `latexmk -pdf main.tex`).
@@ -16,9 +17,10 @@
 - **MSC 2020:** Primary `33D45`, `11R18`; Secondary `11C08`, `11S05`, `33C45`
 - **Target journals (zero-fee):** *SIGMA* (diamond OA, fast turnaround, ideal fit), *The Ramanujan Journal*, *Journal of Approximation Theory*.
 
-## Verify Computations
+## Verify Computations and Lean Proofs
 ```bash
 python3 verify_rogers_szego.py
 c++ -O3 -std=c++17 certify_composite_orders.cpp -o /tmp/certify_composite_orders
 /tmp/certify_composite_orders composite_witnesses.csv
+lean RogersSzegoDiscriminants.lean
 ```
